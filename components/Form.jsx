@@ -114,7 +114,7 @@ export default function Form() {
                     ppDiv(pdfPhone1, { padding: { top: 2 }}),
                     pdfPhone2,
                     ppText(msTeams ? `MS Teams ${msTeamsLinks}` : '', { fontSize: 8, textColor: '#4c565c' })
-                ], { width: 95, crossAxisAlignment: "end" });
+                ], { width: 45, crossAxisAlignment: "end" });
                 // PDF Rightside content
                 const companyName = ppText("ip&more GmbH", { fontSize: 9, textColor: '#4c565c', bold: true });
                 const companyDir = ppText("Oskar-Messter-Str. 13, 85737 Ismaning", { fontSize: 7, textColor: '#4c565c' });
@@ -169,8 +169,8 @@ export default function Form() {
 
     return (
         <>
-            <div className="flex items-center justify-center w-1/2 h-[90vh] min-h-[65rem]">
-                <div className="px-20 w-full flex flex-col items-center justify-center">
+            <div className="flex items-center justify-center w-full lg:w-1/2 lg:h-screen lg:min-h-[65rem] bg-white">
+                <div className="px-5 sm:px-20 w-full flex flex-col items-center justify-center gap-5">
                     <div className="lazy-load-1">
                         <Image src={"/logo.webp"} width={297} height={100} alt="Brand logo" />
                     </div>
@@ -274,7 +274,7 @@ function Input({ id, label, placeholder, type, value, onChange, classes }) {
                 onChange={onChange}
                 type={type}
                 placeholder={placeholder}
-                className="border border-[#f2a42d] rounded-lg px-3 py-2 placeholder:font-light placeholder:text-zinc-400 outline-none"
+                className="border-2 border-[#f2a42d] rounded-lg px-3 py-2 placeholder:font-light placeholder:text-zinc-400 outline-none"
             />
         </div>
     )

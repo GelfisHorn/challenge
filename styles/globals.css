@@ -7,6 +7,7 @@
 
 body {
     font-family: 'Poppins', sans-serif;
+    user-select: none;
 }
 
 /* Change the white to any color */
@@ -15,6 +16,14 @@ input:-webkit-autofill:hover,
 input:-webkit-autofill:focus, 
 input:-webkit-autofill:active{
     -webkit-box-shadow: 0 0 0 30px white inset !important;
+}
+
+img {
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
 }
 
 .input-transition {
