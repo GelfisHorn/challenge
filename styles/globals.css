@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+/* font-family: 'Poppins', sans-serif; */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Change the white to any color */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+}
+
+.input-transition {
+    animation-name: input-transition;
+    animation-duration: .3s;
+    animation-timing-function: ease-in-out;
+}
+
+@keyframes input-transition {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    } 
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.lazy-load-1 {
+    animation-name: lazy-load-1;
+    animation-duration: .3s;
+    animation-timing-function: ease-in-out;
+}
+
+@keyframes lazy-load-1 {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    } 
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.lazy-load-2 {
+    animation-name: lazy-load-2;
+    animation-duration: .3s;
+    animation-delay: .2s;
+    animation-timing-function: ease-in-out;
+}
+
+@keyframes lazy-load-2 {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    } 
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.lazy-load-3 {
+    animation-name: lazy-load-3;
+    animation-duration: .3s;
+    animation-delay: 4s;
+    animation-timing-function: ease-in-out;
+}
+
+@keyframes lazy-load-3 {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    } 
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
