@@ -4,10 +4,12 @@ import Image from "next/image"
 // React toastify (notifications)
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-// Create PDF Files
-import { ppDiv, ppText, ppImage, ppRow, ppColumn, PdfDocument } from 'painless-pdf'
 // Create ZIP files
 import JSZip from "jszip";
+// Hooks
+import createHTML from "@/hooks/createHTML";
+import createPDF from "@/hooks/createPDF";
+import createTXT from "@/hooks/createTXT";
 
 export default function Form() {
 
@@ -84,75 +86,19 @@ export default function Form() {
         fetch('/pdf-image.png')
             .then(response => response.arrayBuffer())
             .then(data => {
-                // Convert image to base64
-                const base64File = Buffer.from(data).toString('base64')
-                const options = {
-                    base64: base64File,
-                    fileType: "PNG",
-                    originalWidth: 184,
-                    originalHeight: 72,
-                    width: 46,
-                    height: 18,
-                }
-                // Image
-                const pdfImage = ppImage(options)
-                // Name and surname
-                const pdfName = ppText(name, { bold: true, textColor: '#4c565c', fontSize: 9 });
-                const pdfSurname = ppText(surname, { bold: true, textColor: '#4c565c', fontSize: 9 });
-                // Position
-                const pdfPosition = ppText(position, { bold: true, textColor: '#ec815d', fontSize: 7 });
-                // Email
-                const pdfEmail = ppText(email, { fontSize: 7, textColor: '#4c565c', underline: true });
-                const pdfPhone1 = ppText(`tel ${phoneNumber1}`, { fontSize: 8, textColor: '#4c565c' })
-                const pdfPhone2 = ppText(phoneNumber2 ? `mobil ${phoneNumber2}` : '', { fontSize: 8, textColor: '#4c565c' })
-                // PDF Leftside content
-                const leftSide = ppColumn([
-                    pdfImage, 
-                    ppDiv(ppRow([pdfName, pdfSurname]), { padding: { top: 3 }}), 
-                    pdfPosition, 
-                    ppDiv(pdfEmail, { padding: { top: 3 }}),
-                    ppDiv(pdfPhone1, { padding: { top: 2 }}),
-                    pdfPhone2,
-                    ppText(msTeams ? `MS Teams ${msTeamsLinks}` : '', { fontSize: 8, textColor: '#4c565c' })
-                ], { width: 45, crossAxisAlignment: "end" });
-                // PDF Rightside content
-                const companyName = ppText("ip&more GmbH", { fontSize: 9, textColor: '#4c565c', bold: true });
-                const companyDir = ppText("Oskar-Messter-Str. 13, 85737 Ismaning", { fontSize: 7, textColor: '#4c565c' });
-                const companyPhone = ppText("tel +49 89 350392 0", { fontSize: 7, textColor: '#4c565c' });
-                const companyEmail = ppText("info@ipandmore.de", { fontSize: 7, textColor: '#4c565c', underline: true });
-                const companyWebsite = ppText("https://www.ipandmore.de", { fontSize: 7, textColor: '#4c565c', underline: true });
-                const companyDir2 = ppText("Hauptstr. 9, 85293 Reichertshausen", { fontSize: 7, textColor: '#4c565c' });
-                const companyPhone2 = ppText("tel +49 89 350393 0", { fontSize: 7, textColor: '#4c565c' });
-                const companyOffice = ppText("Ismaning, Amtsgericht: München HRB 130858", { fontSize: 7, textColor: '#4c565c' });
-                const companyDirector = ppText("Christian Dietrich & Christian Kleinheinz", { fontSize: 7, textColor: '#4c565c' });
-                const rightSide = ppColumn([
-                    ppDiv(companyName, { padding: { bottom: 2 }}),
-                    companyDir,
-                    companyPhone,
-                    companyEmail,
-                    companyWebsite,
-                    ppDiv(ppColumn([
-                        ppText("Verwaltung:", { fontSize: 7, textColor: '#4c565c' }),
-                        companyDir2,
-                        companyPhone2
-                    ]), { padding: { top: 2, bottom: 2 }}),
-                    companyOffice,
-                    companyDirector
-                ])
-                // Build PDF
-                const doc = new PdfDocument(
-                    ppRow([
-                        ppDiv(leftSide, { border: { top: { width: 0 }, left: { width: 0 }, bottom: { width: 0 }, right: { width: .4, color: '#b2b2b2' } }, padding: { right: 4, left: 4 }}),
-                        ppDiv(rightSide, { padding: { left: 4, top: 4 }})
-                    ])
-                );
-                const jsPdfDoc = doc.build();
-                // Convert pdf to ArrayBuffer
-                const pdfBuffer = jsPdfDoc.output("arraybuffer");
-                // Create ZIP file
+                // Build HTML File
+                const htmlSignature = createHTML({ name, surname, position, department, email, phoneNumber1, phoneNumber2, msTeams, msTeamsLinks })
+                // Build PDF File
+                const pdfSignature = createPDF({ image: data, name, surname, position, department, email, phoneNumber1, phoneNumber2, msTeams, msTeamsLinks });
+                // Build TXT File
+                const txtSignature = createTXT({ name, surname, position, department, email, phoneNumber1, phoneNumber2, msTeams, msTeamsLinks });
+                // Create ZIP File
                 const zip = new JSZip();
                 // Add PDF file to ZIP File
-                zip.file(`${name}_${surname}_signature.pdf`, pdfBuffer);
+                zip.folder("data").file(`image001.png`, data);
+                zip.file(`${name}_${surname}.html`, htmlSignature);
+                zip.file(`${name}_${surname}.pdf`, pdfSignature);
+                zip.file(`${name}_${surname}.txt`, txtSignature);
                 zip.generateAsync({ type: "blob" })
                     .then(function(content) {
                         // create a download link for the zip file
@@ -242,9 +188,9 @@ export default function Form() {
                             <Input 
                                 classes={"input-transition"} 
                                 id={"ms-teams-link"} 
-                                label={"MS-Teams link"} 
+                                label={"MS-Teams e-mail"} 
                                 type={"text"} 
-                                placeholder={"Type your MS-Teams link"} 
+                                placeholder={"Type your MS-Teams e-mail"} 
                                 value={msTeamsLinks} 
                                 onChange={e => setMsTeamsLinks(e.target.value)} 
                             />
